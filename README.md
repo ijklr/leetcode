@@ -1,2 +1,1 @@
-# leetcode
-2025
+leetcode for life!
