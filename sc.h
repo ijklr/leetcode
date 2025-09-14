@@ -6,3 +6,7 @@ int sc_uniq(int* arr, int sz);
 // The search includes begin index but not the end index.
 // if not found, returns -1;
 int sc_find(int arr[], int begin, int end, int e);
+
+// print the array
+void sc_print(int arr[], int sz, const char* label);
+

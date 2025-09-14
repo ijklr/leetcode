@@ -1,10 +1,23 @@
 #include "sc.h"
 
 #include <stdlib.h>  // qsort()
+#include <stdio.h>
 
-int sc_compare_int(const void *a, const void *b) {
-    return (*(int *)a - *(int *)b);
+void sc_print(int arr[], int sz, const char* label) {
+    printf("%s:", label);
+    for (int i = 0; i < sz; ++i) {
+	printf(" %d", arr[i]);
+    }
+    printf("\n");
 }
+
+static int sc_compare_int(const void *a, const void *b) {
+    int x = *(const int*)a, y = *(const int*)b;
+// avoids overflow
+    return (x > y) - (x < y);
+}
+
+
 
 int sc_uniq(int *arr, int sz) {
     if (sz == 0 || sz == 1) {

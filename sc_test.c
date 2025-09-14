@@ -1,8 +1,6 @@
 #include "sc.h"
-
+#include <assert.h>
 #include <stdio.h>
-
-#include "assert.h"
 
 void print(int arr[], int sz) {
     for (int i = 0; i < sz; ++i) {
@@ -25,7 +23,7 @@ int test_uniq() {
 
 int test_find() {
     printf("======test uniq======\n");
-    int arr[] = {1921384, 888, 5, 3, 2, 2, 10, -100, -100, -100};
+    int arr[] = {1384, 888, 5, 3, 2, 2, 10, -100, -100, -100};
     print(arr, 10);
     int n = sc_uniq(arr, 10);
     print(arr, n);
