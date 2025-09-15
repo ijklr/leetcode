@@ -78,10 +78,10 @@ int main() {
 
     int** ans = findDifference(nums1, nums1Size, nums2, nums2Size, &returnSize, &returnColumnSizes );
     
-    printf("done!\n");
+    printf("calculation done!\n");
     sc_print(ans[0], returnColumnSizes[0], "first");
     sc_print(ans[1], returnColumnSizes[1], "second");
-    printf("done!\n");
+    printf("exiting main!\n");
 
     return 0;
 }

@@ -1,23 +1,21 @@
 #include "sc.h"
 
-#include <stdlib.h>  // qsort()
 #include <stdio.h>
+#include <stdlib.h>  // qsort()
 
-void sc_print(int arr[], int sz, const char* label) {
+void sc_print(int arr[], int sz, const char *label) {
     printf("%s:", label);
     for (int i = 0; i < sz; ++i) {
-	printf(" %d", arr[i]);
+        printf(" %d", arr[i]);
     }
     printf("\n");
 }
 
 static int sc_compare_int(const void *a, const void *b) {
-    int x = *(const int*)a, y = *(const int*)b;
-// avoids overflow
+    int x = *(const int *)a, y = *(const int *)b;
+    // avoids overflow
     return (x > y) - (x < y);
 }
-
-
 
 int sc_uniq(int *arr, int sz) {
     if (sz == 0 || sz == 1) {
@@ -45,11 +43,14 @@ int sc_find(int arr[], int begin, int end, int e) {
         case 1:
             return arr[begin] == e ? begin : -1;
         case 2:
-            return arr[begin] == e ? begin : (arr[begin+1] == e ? begin+1 : -1);
+            return arr[begin] == e ? begin
+                                   : (arr[begin + 1] == e ? begin + 1 : -1);
         default:
-	    mid = begin + sz/2;
-	    if (arr[mid] == e) return mid;
-	    if (arr[mid] < e) return sc_find(arr, mid+1, end, e);
-	    else return sc_find(arr, begin, mid, e);
+            mid = begin + sz / 2;
+            if (arr[mid] == e) return mid;
+            if (arr[mid] < e)
+                return sc_find(arr, mid + 1, end, e);
+            else
+                return sc_find(arr, begin, mid, e);
     }
 }
