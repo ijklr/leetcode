@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /*
 Input
@@ -16,26 +17,21 @@ trie.search("app");     // return False
 trie.startsWith("app"); // return True
 trie.insert("app");
 trie.search("app");     // return True
- 
+
 Constraints:
 
 1 <= word.length, prefix.length <= 2000
 word and prefix consist only of lowercase English letters.
 At most 3 * 104 calls in total will be made to insert, search, and startsWith.
 */
-
-struct Node {
+typedef struct Trie {
+    struct Trie* children[26];
     char c;
-    struct Node* next;
-};
-
-typedef struct {
-    struct Node node[26];
-
-
+    u_int8_t is_word;
 } Trie;
 
-Trie* trieCreate() { return NULL; }
+/* Returns an initialized Trie */
+Trie* trieCreate() { return calloc(1, sizeof(Trie)); }
 
 void trieInsert(Trie* obj, char* word) {}
 

@@ -1,0 +1,4 @@
+Checks: 'clang-analyzer-*,bugprone-*,performance-*,portability-*,-clang-analyzer-alpha.*'
+CheckOptions:
+  - key:             readability-braces-around-statements.ShortStatementLines
+    value:           '2'
