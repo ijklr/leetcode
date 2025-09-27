@@ -19,6 +19,7 @@ int test_uniq() {
   printf("after uniq: \n");
   print(arr, ret);
   assert(ret == 6);
+  return 0;
 }
 
 int test_find() {
@@ -33,10 +34,12 @@ int test_find() {
   int not_found = sc_find(arr, 0, n, 123);
   assert(not_found == -1);
   printf("not_found=%d\n", not_found);
+  return 0;
 }
 
 int main() {
   test_uniq();
   test_find();
+  return 0;
 }
 
