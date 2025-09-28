@@ -56,37 +56,33 @@ int sc_find(int arr[], int begin, int end, int e) {
 }
 
 typedef struct sc_sstore {
-// I start with 1024 items for t[0].
-// For leetcodee, there is no way it will need to double 16 times or more.
-sc_sstore_t *storage[16];
-int i; // we're at the ith storage.
-int j; // we're at the jth element in storage[i].
-int capacity_at_i; // current capacity for storage[i].
+    // I start with 1024 items for t[0].
+    // For leetcodee, there is no way it will need to double 16 times or more.
+    sc_sstore_t *storage[16];
+    int i;              // we're at the ith storage.
+    int j;              // we're at the jth element in storage[i].
+    int capacity_at_i;  // current capacity for storage[i].
 } sc_sstore;
 
-sc_sstore* sc_sstore_init() {
-return calloc(1, sizeof(sc_sstore));
+sc_sstore *sc_sstore_init() { return calloc(1, sizeof(sc_sstore)); }
+
+void sc_sstore_push(sc_sstore *s, sc_sstore_t t) {
+    if (s->j == s->capacity_at_i) {
+        s->i++;
+        s->j = 0;
+        s->storage[s->i] = malloc(s->capacity_at_i * 2);
+    }
+
+    // store->t[i]
 }
 
-void sc_sstore_push(sc_sstore* s, sc_sstore_t t) {
-if(s->j == s->capacity_at_i) {
-s->i++;
-s->j=0;
-s->storage[s->i] = malloc(s->capacity_at_i * 2);
-}
-
-//store->t[i]
-
-
-}
-
-void sc_sstore_free(sc_sstore* store) {
-if (!store) {
-return;
-}
-for (int i=0; i<16; ++i) {
-if (store->t[i]) {
-free(store->t[i]);
-}
-}
+void sc_sstore_free(sc_sstore *store) {
+    if (!store) {
+        return;
+    }
+    for (int i = 0; i < 16; ++i) {
+        if (store->t[i]) {
+            free(store->t[i]);
+        }
+    }
 }
