@@ -1,7 +1,7 @@
 #include "sc.h"
 
 #include <stdio.h>
-#include <stdlib.h>  // qsort()
+#include <stdlib.h> // qsort(), malloc(), calloc(), free()
 
 void sc_print(int arr[], int sz, const char *label) {
     printf("%s:", label);
@@ -13,7 +13,6 @@ void sc_print(int arr[], int sz, const char *label) {
 
 static int sc_compare_int(const void *a, const void *b) {
     int x = *(const int *)a, y = *(const int *)b;
-    // avoids overflow
     return (x > y) - (x < y);
 }
 
@@ -57,18 +56,19 @@ int sc_find(int arr[], int begin, int end, int e) {
 
 typedef struct sc_sstore {
     sc_sstore_t *storage[16];
-    int i;              // current storage index
-    int j;              // next free slot in storage[i]
-    int capacity_at_i;  // capacity for storage[i]
+    int i;              /* current storage index */
+    int j;              /* next free slot in storage[i] */
+    int capacity_at_i;  /* capacity for storage[i] */
 } sc_sstore;
 
-sc_sstore *sc_sstore_init() {
+sc_sstore *sc_sstore_init(void) {
     sc_sstore *s = calloc(1, sizeof(sc_sstore));
     if (!s) return NULL;
     s->i = 0;
     s->j = 0;
     s->capacity_at_i = 1024;
     s->storage[0] = malloc(sizeof(sc_sstore_t) * s->capacity_at_i);
+    if (!s->storage[0]) { free(s); return NULL; }
     return s;
 }
 
@@ -85,7 +85,7 @@ void sc_sstore_push(sc_sstore *s, sc_sstore_t t) {
     s->storage[s->i][s->j++] = t;
 }
 
-void* sc_sstore_find(sc_sstore *s) {
+void *sc_sstore_find(sc_sstore *s) {
     (void)s;
     return NULL;
 }
@@ -93,7 +93,7 @@ void* sc_sstore_find(sc_sstore *s) {
 void sc_sstore_free(sc_sstore *store) {
     if (!store) return;
     for (int i = 0; i <= store->i && i < 16; ++i) {
-        if (store->storage[i]) free(store->storage[i]);
+        free(store->storage[i]);
     }
     free(store);
 }

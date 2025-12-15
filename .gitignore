@@ -1,0 +1,6 @@
+
+
+# Ignore JSON files and Windows executables
+*.json
+*.exe
+
