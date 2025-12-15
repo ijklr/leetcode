@@ -11,7 +11,7 @@ int sc_find(int arr[], int begin, int end, int e);
 void sc_print(int arr[], int sz, const char* label);
 
 
-typedef struct sc_sstore sc_store;
+typedef struct sc_sstore sc_sstore;
 
 #define sc_sstore_t int
 
