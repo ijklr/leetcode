@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h> // qsort(), malloc(), calloc(), free()
 
-void sc_print(int arr[], int sz, const char *label) {
+void sc_print(const int arr[], int sz, const char *label) {
     printf("%s:", label);
     for (int i = 0; i < sz; ++i) {
         printf(" %d", arr[i]);
@@ -33,7 +33,7 @@ int sc_uniq(int *arr, int sz) {
     return write_i;
 }
 
-int sc_find(int arr[], int begin, int end, int e) {
+int sc_find(const int arr[], int begin, int end, int e) {
     int sz = end - begin;
     int mid;
     switch (sz) {
