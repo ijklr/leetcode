@@ -4,6 +4,7 @@
 #include <stdlib.h> // qsort(), malloc(), calloc(), free()
 
 void sc_print(int arr[], int sz, const char *label) {
+    if (!arr || !label) return;
     printf("%s:", label);
     for (int i = 0; i < sz; ++i) {
         printf(" %d", arr[i]);
@@ -17,7 +18,10 @@ static int sc_compare_int(const void *a, const void *b) {
 }
 
 int sc_uniq(int *arr, int sz) {
-    if (sz == 0 || sz == 1) {
+    if (!arr || sz <= 0) {
+        return 0;
+    }
+    if (sz == 1) {
         return sz;
     }
     qsort(arr, sz, sizeof(int), sc_compare_int);
@@ -33,7 +37,10 @@ int sc_uniq(int *arr, int sz) {
     return write_i;
 }
 
-int sc_find(int arr[], int begin, int end, int e) {
+int sc_find(const int arr[], int begin, int end, int e) {
+    if (!arr || begin < 0 || end < begin) {
+        return -1;
+    }
     int sz = end - begin;
     int mid;
     switch (sz) {
@@ -55,10 +62,11 @@ int sc_find(int arr[], int begin, int end, int e) {
 }
 
 typedef struct sc_sstore {
-    sc_sstore_t *storage[16];
-    int i;              /* current storage index */
-    int j;              /* next free slot in storage[i] */
-    int capacity_at_i;  /* capacity for storage[i] */
+    sc_sstore_t **storage;  /* array of storage chunks */
+    int i;                  /* current storage index */
+    int j;                  /* next free slot in storage[i] */
+    int capacity_at_i;      /* capacity for storage[i] */
+    int max_chunks;         /* maximum number of chunks */
 } sc_sstore;
 
 sc_sstore *sc_sstore_init(void) {
@@ -67,33 +75,48 @@ sc_sstore *sc_sstore_init(void) {
     s->i = 0;
     s->j = 0;
     s->capacity_at_i = 1024;
+    s->max_chunks = 16;
+    s->storage = calloc(s->max_chunks, sizeof(sc_sstore_t *));
+    if (!s->storage) {
+        free(s);
+        return NULL;
+    }
     s->storage[0] = malloc(sizeof(sc_sstore_t) * s->capacity_at_i);
-    if (!s->storage[0]) { free(s); return NULL; }
+    if (!s->storage[0]) {
+        free(s->storage);
+        free(s);
+        return NULL;
+    }
     return s;
 }
 
-void sc_sstore_push(sc_sstore *s, sc_sstore_t t) {
-    if (!s) return;
+int sc_sstore_push(sc_sstore *s, sc_sstore_t t) {
+    if (!s) return -1;
     if (s->j == s->capacity_at_i) {
-        if (s->i + 1 >= 16) return; /* capacity limit */
+        if (s->i + 1 >= s->max_chunks) return -1; /* capacity limit */
+
+        /* Try to allocate new chunk before modifying state */
+        int new_capacity = s->capacity_at_i * 2;
+        sc_sstore_t *new_chunk = malloc(sizeof(sc_sstore_t) * new_capacity);
+        if (!new_chunk) return -1; /* allocation failed */
+
+        /* Allocation succeeded, now update state */
         s->i++;
         s->j = 0;
-        s->capacity_at_i *= 2;
-        s->storage[s->i] = malloc(sizeof(sc_sstore_t) * s->capacity_at_i);
-        if (!s->storage[s->i]) return;
+        s->capacity_at_i = new_capacity;
+        s->storage[s->i] = new_chunk;
     }
     s->storage[s->i][s->j++] = t;
-}
-
-void *sc_sstore_find(sc_sstore *s) {
-    (void)s;
-    return NULL;
+    return 0; /* success */
 }
 
 void sc_sstore_free(sc_sstore *store) {
     if (!store) return;
-    for (int i = 0; i <= store->i && i < 16; ++i) {
-        free(store->storage[i]);
+    if (store->storage) {
+        for (int i = 0; i <= store->i && i < store->max_chunks; ++i) {
+            free(store->storage[i]);
+        }
+        free(store->storage);
     }
     free(store);
 }
