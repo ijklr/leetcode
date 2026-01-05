@@ -14,21 +14,28 @@
  * ======================================================================== */
 
 /**
- * Make the elements in an array unique by sorting and removing duplicates.
+ * Sort an array and remove duplicates in-place.
  *
  * @param arr  The array to process (will be modified in-place)
  * @param sz   The size of the array
- * @return     The resulting size after removing duplicates
+ * @return     The resulting size after removing duplicates, or 0 if arr is NULL
  *
  * Note: The array will be sorted in ascending order after this operation.
  */
-int sc_uniq(int *arr, int sz);
+int sc_sort_uniq(int *arr, int sz);
 
-// Binary search since `arr` is sorted in ascending order already.
-// Returns the index where the matching element resides.
-// The search includes `begin` but excludes `end`.
-// Returns -1 if not found or if arr is NULL.
-int sc_find(const int arr[], int begin, int end, int e);
+/**
+ * Binary search for an element in a sorted array.
+ *
+ * @param arr    The sorted array to search (ascending order)
+ * @param begin  The starting index (inclusive)
+ * @param end    The ending index (exclusive)
+ * @param e      The element to search for
+ * @return       The index where the element is found, or -1 if not found
+ *
+ * Note: Returns -1 if arr is NULL or if the range is invalid.
+ */
+int sc_bsearch(const int arr[], int begin, int end, int e);
 
 /**
  * Print an array with a label.
@@ -42,32 +49,47 @@ int sc_find(const int arr[], int begin, int end, int e);
 void sc_print(const int arr[], int sz, const char *label);
 
 /* ========================================================================
- * Dynamic Storage (sc_sstore)
+ * Dynamic Vector (sc_vec)
  * ======================================================================== */
 
 /**
- * Opaque structure for dynamic storage that grows exponentially.
+ * Opaque structure for dynamic vector that grows exponentially.
  * - Initial capacity: 1024 elements
  * - Growth strategy: 2X on each expansion
- * - Maximum capacity: ~2M elements (16 storage blocks)
+ * - Maximum capacity: ~33.5M elements (16 storage blocks)
  */
-typedef struct sc_sstore sc_sstore;
+typedef struct sc_vec sc_vec;
 
 /**
- * Type of elements stored in sc_sstore.
+ * Type of elements stored in sc_vec.
  * Currently defined as int, can be changed as needed.
  */
-#define sc_sstore_t int
+#define sc_vec_t int
 
-// storage that grows 2X each time. No individual deletion provided.
-// Initial capacity: 1024, max chunks: 16 (total ~33.5M elements)
-sc_sstore *sc_sstore_init(void);
+/**
+ * Initialize a new dynamic vector.
+ *
+ * @return  A pointer to the newly created vector, or NULL on allocation failure
+ *
+ * Note: The vector grows 2X each time it fills up. No individual deletion is provided.
+ *       Initial capacity: 1024 elements, max chunks: 16 (total ~33.5M elements).
+ */
+sc_vec *sc_vec_init(void);
 
-// Push an element to the storage.
-// Returns 0 on success, -1 on failure (NULL pointer, capacity limit, or allocation error).
-int sc_sstore_push(sc_sstore *store, sc_sstore_t t);
+/**
+ * Push an element to the vector.
+ *
+ * @param vec  The vector structure
+ * @param t    The element to push
+ * @return     0 on success, -1 on failure (NULL pointer, capacity limit, or allocation error)
+ */
+int sc_vec_push(sc_vec *vec, sc_vec_t t);
 
-// Free all storage and the store itself.
-void sc_sstore_free(sc_sstore *store);
+/**
+ * Free all storage and the vector structure itself.
+ *
+ * @param vec  The vector structure to free (can be NULL)
+ */
+void sc_vec_free(sc_vec *vec);
 
 #endif /* SC_H */
